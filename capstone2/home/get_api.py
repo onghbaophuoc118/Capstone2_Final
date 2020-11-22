@@ -25,3 +25,36 @@ def getAPIInfoPatientCovidVietNam():
         list_patients.append(items)
 
     return list_patients
+
+def getAPINewsCovidVietNam():
+    url = "https://ncov.moh.gov.vn/vi/web/guest/tin-tuc"
+    res = requests.get(url, verify=False)
+    list_news = []
+
+    soup = BeautifulSoup(res.text, 'html.parser')
+
+    tables_news_covid19 = soup.find('div', class_="portlet-body").find_all('div', class_="")
+    # print(tables_news_covid19)
+    for index, table_news_covid19 in enumerate(tables_news_covid19):
+        if(index == 0):
+            # print("div tieude dau")
+            data_title = table_news_covid19.find('h2', class_='mt-3').text
+            data_link = table_news_covid19.find('a')['href']
+            data_image = table_news_covid19.find('img')['data-src']
+            data_content = table_news_covid19.find('p').text
+            data_date = table_news_covid19.find('small',class_='text-muted').text
+            list_tmp = [data_title,data_link,data_image,data_content,data_date]
+            list_news.append(list_tmp)
+        else:
+            #print("div cua cac cai sau")
+            news = table_news_covid19.find_all('div', class_="row mb-1")
+            for new in news:
+                data_title = new.find('a', class_='text-tletin').text
+                data_link = new.find('a', class_='text-tletin')['href']
+                data_image = new.find('img')['data-src']
+                data_content = new.find('p').text
+                data_date = new.find('small',class_='text-muted').text
+                list_tmp = [data_title,data_link,data_image,data_content,data_date]
+                list_news.append(list_tmp)
+
+    return list_news
