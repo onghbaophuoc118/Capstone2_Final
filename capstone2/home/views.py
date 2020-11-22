@@ -10,6 +10,8 @@ from django.http import JsonResponse
 from .models import PatientInfo
 from django.core.serializers import serialize
 
+from django.db.models import Sum, Count
+
 User = get_user_model()
 
 
@@ -18,7 +20,6 @@ class HomeView(LoginRequiredMixin, DetailView):
     template_name = "home/index.html"
     login_url = "/login/"
 
-
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         return context
@@ -26,29 +27,36 @@ class HomeView(LoginRequiredMixin, DetailView):
     def get_object(self):
         return User.objects.get(username=self.request.user.username)
 
+
 class UpTask(View):
 
-    def get(self,request):
-        update_dataPatient()
+    def get(self, request):
+        update_dataPatient(repeat=3600)
         return JsonResponse({}, status=302)
 
 
 class PatientsListView(View):
     def get(self, request):
-        #abc=PatientInfo.objects.all()
-        #data=serialize("json",abc)
-        data=list(PatientInfo.objects.values())
+        # abc=PatientInfo.objects.all()
+        # data=serialize("json",abc)
+        data = list(PatientInfo.objects.values())
         return JsonResponse(data, safe=False)
 
-class StatisticView(View):
+
+class StatisticViewDictrict(View):
 
     def get(self, request):
-        nguoidangdieutri = PatientInfo.objects.filter(status="Đang điều trị").count()
-        data = list(PatientInfo.objects.filter(status="Đang điều trị").values())
-        return JsonResponse({"nguoidangdieutri": nguoidangdieutri}, safe=False)
-        # data=list(PatientInfo.objects.filter(status="Đang điều trị").values())
-        # print("jhkhkjhk")
-        # print()
-        # return JsonResponse(data, safe=False)
+        NumberOfStatus = PatientInfo.objects.values('address','status').order_by('address').annotate(Count('status'))
+        # a = PatientInfo.objects.values('address').order_by('address')
+        # print(ab)
+        data = list(NumberOfStatus)
+        return JsonResponse(data, safe=False)
 
+class StatisticOverview(View):
 
+    def get(self,request):
+        SumPatients = PatientInfo.objects.values( 'status').annotate(Count('status'))
+        Socanhiem = PatientInfo.objects.all().count()
+        data = [{'Total': Socanhiem}]+list(SumPatients)
+        print(data)
+        return JsonResponse(data, safe=False)

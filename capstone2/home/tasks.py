@@ -3,7 +3,7 @@ from datetime import timedelta
 from .get_api import getAPIInfoPatientCovidVietNam
 from .models import PatientInfo
 
-@background(schedule=timedelta(minutes=2))
+@background(schedule=timedelta(minutes=0))
 def update_dataPatient():
     try:
         list_patients=getAPIInfoPatientCovidVietNam()
