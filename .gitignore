@@ -326,3 +326,5 @@ capstone2/media/
 .pytest_cache/
 
 
+.env
+
