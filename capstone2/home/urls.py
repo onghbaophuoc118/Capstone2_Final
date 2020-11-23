@@ -6,7 +6,7 @@ from capstone2.users.views import (
     LogoutView,
 )
 
-from .views import HomeView, UpTask,PatientsListView,StatisticViewDictrict,StatisticOverview
+from .views import HomeView, UpTask,PatientsListView,StatisticViewDictrict,StatisticOverview,NewsListView
 app_name = "users"
 urlpatterns = [
     path("",view=HomeView.as_view(),name="home"),
@@ -16,5 +16,6 @@ urlpatterns = [
     path("api/getPatientsInfo/", view=PatientsListView.as_view(),name="api_getPatientsInfo"),
     path("api/statisticDictrict/", view=StatisticViewDictrict.as_view(),name="api_getStatisticDictric"),
     path("api/statisticOverView/", view=StatisticOverview.as_view(),name="api_getStatisticOverview"),
+    path("api/getNews/", view=NewsListView.as_view(),name="api_getNews"),
 
 ]

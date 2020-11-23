@@ -61,3 +61,8 @@ class StatisticOverview(View):
         data = [{'Total': Socanhiem}]+list(SumPatients)
         print(data)
         return JsonResponse(data, safe=False)
+
+class NewsListView(View):
+    def get(self, request):
+        data = list(NewsInfo.objects.values())
+        return JsonResponse(data, safe=False)

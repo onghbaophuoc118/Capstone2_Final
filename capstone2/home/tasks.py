@@ -22,7 +22,10 @@ def update_dataNews():
             if(NewsInfo.objects.filter(title=list_new[0]).count()>0):
                 pass
             else:
-                p = NewsInfo(title=list_new[0], link=list_new[1], image=list_new[2], content=list_new[3],
+                p = NewsInfo(title=list_new[0],
+                             link=list_new[1],
+                             image=list_new[2],
+                             content=list_new[3],
                              date=list_new[4])
                 p.save()
     except Exception:
