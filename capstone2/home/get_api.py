@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def getAPIInfoPatientCovidVietNam():
     url = "https://ncov.moh.gov.vn"
     res = requests.get(url, verify=False)
@@ -58,3 +59,28 @@ def getAPINewsCovidVietNam():
                 list_news.append(list_tmp)
 
     return list_news
+
+
+def getAPIDirectingCovidVietNam():
+    url = "https://ncov.moh.gov.vn/chinh-sach-phong-chong-dich"
+    res = requests.get(url, verify=False)
+    list_directing = []
+
+    soup = BeautifulSoup(res.text, 'html.parser')
+
+    tables_directing_covid19 = soup.find_all('div', class_="timeline-detail")
+    for table_directing in tables_directing_covid19:
+        timeline_head = table_directing.find('div', class_="timeline-head")
+        timeline_content = table_directing.find('div', class_="timeline-content")
+        data_date=timeline_head.find('span', class_="ngay-xuat-ban").text.strip()
+        data_dictrict=timeline_head.find('span', class_="tinh-thanhpho").text
+        data_title=timeline_content.find('p').find('strong').text
+        data_content=timeline_content.findChildren('p', recursive=False)[1].text
+        data_effect=timeline_content.findChildren('p', recursive=False)[2].text[14:].strip()
+        data_link=timeline_content.find('a')['href']
+        list_tmp = [data_date,data_dictrict,data_title, data_content, data_effect, data_link]
+        list_directing.append(list_tmp)
+
+    return list_directing
+
+

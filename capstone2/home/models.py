@@ -21,3 +21,24 @@ class NewsInfo(models.Model):
 
     def __str__(self):
         return self.title
+
+class DirectingInfo(models.Model):
+    date=models.CharField(max_length=500)
+    dictrict=models.CharField(max_length=500)
+    title=models.CharField(max_length=500)
+    content=models.CharField(max_length=500)
+    effect=models.CharField(max_length=500)
+    link = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.title
+
+class DictricStatictisInfo(models.Model):
+    address=models.CharField(max_length=500)
+    socanhiem = models.IntegerField(default=0)
+    dangdieutri=models.IntegerField(default=0)
+    khoi=models.IntegerField(default=0)
+    tuvong=models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.address

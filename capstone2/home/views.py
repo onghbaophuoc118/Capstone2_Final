@@ -5,12 +5,13 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, RedirectView, UpdateView
-from .tasks import update_dataPatient,update_dataNews
+from .tasks import update_dataPatient, update_dataNews, update_dataDirecting
 from django.http import JsonResponse
-from .models import PatientInfo,NewsInfo
+from .models import PatientInfo, NewsInfo, DirectingInfo,DictricStatictisInfo
 from django.core.serializers import serialize
 
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, F
+import json
 
 User = get_user_model()
 
@@ -32,7 +33,8 @@ class UpTask(View):
 
     def get(self, request):
         update_dataPatient(repeat=3600)
-        update_dataNews(repeat=1800)
+        # update_dataNews(repeat=1800)
+        # update_dataDirecting(repeat=1800)
         return JsonResponse({}, status=302)
 
 
@@ -47,20 +49,19 @@ class PatientsListView(View):
 class StatisticViewDictrict(View):
 
     def get(self, request):
-        NumberOfStatus = PatientInfo.objects.values('address','status').order_by('address').annotate(Count('status'))
-        # a = PatientInfo.objects.values('address').order_by('address')
-        # print(ab)
-        data = list(NumberOfStatus)
+        data = list(DictricStatictisInfo.objects.values())
         return JsonResponse(data, safe=False)
+
 
 class StatisticOverview(View):
 
-    def get(self,request):
-        SumPatients = PatientInfo.objects.values( 'status').annotate(Count('status'))
+    def get(self, request):
+        SumPatients = PatientInfo.objects.values('status').annotate(Count('status'))
         Socanhiem = PatientInfo.objects.all().count()
-        data = [{'Total': Socanhiem}]+list(SumPatients)
+        data = [{'Total': Socanhiem}] + list(SumPatients)
         print(data)
         return JsonResponse(data, safe=False)
+
 
 class NewsListView(View):
     def get(self, request):
