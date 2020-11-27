@@ -33,8 +33,8 @@ class UpTask(View):
 
     def get(self, request):
         update_dataPatient(repeat=3600)
-        # update_dataNews(repeat=1800)
-        # update_dataDirecting(repeat=1800)
+        update_dataNews(repeat=1800)
+        update_dataDirecting(repeat=1800)
         return JsonResponse({}, status=302)
 
 
