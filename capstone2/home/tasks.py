@@ -3,34 +3,41 @@ from datetime import timedelta
 from .get_api import getAPIInfoPatientCovidVietNam,getAPINewsCovidVietNam,getAPIDirectingCovidVietNam
 from .models import PatientInfo,NewsInfo,DirectingInfo, DictricStatictisInfo
 from django.db.models import Sum, Count, F
+import os
+import json
+import codecs
 
 @background(schedule=timedelta(minutes=0))
 def update_dataPatient():
     try:
-        list_patients=getAPIInfoPatientCovidVietNam()
-        f=open('data-file.txt','w')
-        PatientInfo.objects.all().delete()
-        for list_patient in list_patients:
-            p = PatientInfo(id_patient=list_patient[0],age=list_patient[1],address=list_patient[2],status=list_patient[3],national=list_patient[4])
-            p.save()
-
-        # save dictric static
-        DictricStatictisInfo.objects.all().delete()
-        dictrict = PatientInfo.objects.all().values('address').distinct().order_by('address')
-        for item in dictrict:
-            abcs = PatientInfo.objects.filter(address= item['address']).values('status').annotate(number=Count('address'))
-            d = DictricStatictisInfo(address=item['address'])
-            for abc in abcs:
-                if abc['status'] == "Khỏi":
-                    d.khoi = int(abc['number'])
-                elif abc['status'] == "Đang điều trị":
-                    d.dangdieutri = int(abc['number'])
-                elif abc['status'] == "Tử vong":
-                    d.tuvong = int(abc['number'])
-                else:
-                    d.socanhiem = int(abc['number'])
-            d.socanhiem = d.khoi + d.dangdieutri + d.tuvong + d.socanhiem
-            d.save()
+        list_patienlts=getAPIInfoPatientCovidVietNam()
+        # fd = open(os.getcwd()+'\data-file.txt', "w",encoding='utf8')
+        # fd.write(json.dumps(list_patienlts),ensure_ascii=False)
+        # fd.close()
+        with codecs.open(os.getcwd()+'\data-file.txt', 'w', encoding='utf-8') as f:
+            json.dump(list_patienlts, f, ensure_ascii=False)
+        # PatientInfo.objects.all().delete()
+        # for list_patient in list_patients:
+        #     p = PatientInfo(id_patient=list_patient[0],age=list_patient[1],address=list_patient[2],status=list_patient[3],national=list_patient[4])
+        #     p.save()
+        #
+        # # save dictric static
+        # DictricStatictisInfo.objects.all().delete()
+        # dictrict = PatientInfo.objects.all().values('address').distinct().order_by('address')
+        # for item in dictrict:
+        #     abcs = PatientInfo.objects.filter(address= item['address']).values('status').annotate(number=Count('address'))
+        #     d = DictricStatictisInfo(address=item['address'])
+        #     for abc in abcs:
+        #         if abc['status'] == "Khỏi":
+        #             d.khoi = int(abc['number'])
+        #         elif abc['status'] == "Đang điều trị":
+        #             d.dangdieutri = int(abc['number'])
+        #         elif abc['status'] == "Tử vong":
+        #             d.tuvong = int(abc['number'])
+        #         else:
+        #             d.socanhiem = int(abc['number'])
+        #     d.socanhiem = d.khoi + d.dangdieutri + d.tuvong + d.socanhiem
+        #     d.save()
 
     except Exception:
         print("error")
