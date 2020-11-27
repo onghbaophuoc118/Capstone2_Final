@@ -10,9 +10,9 @@ import codecs
 @background(schedule=timedelta(minutes=0))
 def update_dataPatient():
     try:
-        list_patienlts=getAPIInfoPatientCovidVietNam()
+        list_patients=getAPIInfoPatientCovidVietNam()
         with codecs.open(os.getcwd()+'\data-file.txt', 'w', encoding='utf-8') as f:
-            json.dump(list_patienlts, f, ensure_ascii=False)
+            json.dump(list_patients, f, ensure_ascii=False)
         PatientInfo.objects.all().delete()
         for list_patient in list_patients:
             p = PatientInfo(id_patient=list_patient[0],age=list_patient[1],address=list_patient[2],status=list_patient[3],national=list_patient[4])
