@@ -67,3 +67,8 @@ class NewsListView(View):
     def get(self, request):
         data = list(NewsInfo.objects.values())
         return JsonResponse(data, safe=False)
+
+class DirectingListView(View):
+    def get(self, request):
+        data = list(DirectingInfo.objects.values())
+        return JsonResponse(data, safe=False)

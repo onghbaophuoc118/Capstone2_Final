@@ -24,7 +24,7 @@ class NewsInfo(models.Model):
 
 class DirectingInfo(models.Model):
     date=models.CharField(max_length=500)
-    dictrict=models.CharField(max_length=500)
+    address=models.CharField(max_length=500)
     title=models.CharField(max_length=500)
     content=models.CharField(max_length=500)
     effect=models.CharField(max_length=500)
