@@ -55,10 +55,19 @@ class StatisticViewDictrict(View):
 
 class StatisticOverview(View):
 
+    # def get(self, request):
+    #     SumPatients = PatientInfo.objects.values('status').annotate(Count('status'))
+    #     Socanhiem = PatientInfo.objects.all().count()
+    #     data = [{'Total': Socanhiem}] + list(SumPatients)
+    #     print(data)
+    #     return JsonResponse(data, safe=False)
     def get(self, request):
-        SumPatients = PatientInfo.objects.values('status').annotate(Count('status'))
-        Socanhiem = PatientInfo.objects.all().count()
-        data = [{'Total': Socanhiem}] + list(SumPatients)
+        #SumPatients = PatientInfo.objects.values('status').count()
+        socanhiem = PatientInfo.objects.all().count()
+        dangdieutri = PatientInfo.objects.filter(status='Đang điều trị').count()
+        khoi= PatientInfo.objects.filter(status='Khỏi').count()
+        tuvong=PatientInfo.objects.filter(status='Tử vong').count()
+        data = [{'So ca Nhiem': socanhiem,'Dang dieu tri': dangdieutri,'Khoi':khoi,'Tu Vong':tuvong}]
         print(data)
         return JsonResponse(data, safe=False)
 
