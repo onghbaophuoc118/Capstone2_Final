@@ -296,3 +296,4 @@ SOCIALACCOUNT_ADAPTER = "capstone2.users.adapters.SocialAccountAdapter"
 # Your stuff...
 # ------------------------------------------------------------------------------
 DATA_UPLOAD_MAX_NUMBER_FIELDS=10000
+APPEND_SLASH=False

@@ -8,7 +8,6 @@ def getAPIInfoPatientCovidVietNam():
     list_patients = []
 
     soup = BeautifulSoup(res.text, 'html.parser')
-
     tables_stats_covid19 = soup.find('section', class_="bg-xam pt-5 pb-5 mb-5").find_all('div', class_=["text-success","text-danger","text-muted"])
     for table_stats_covid19 in tables_stats_covid19:
         id_vs_age_patient = table_stats_covid19.find('a').get_text()
