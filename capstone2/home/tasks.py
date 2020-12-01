@@ -1,7 +1,7 @@
 from background_task import background
 from datetime import timedelta
-from .get_api import getAPIInfoPatientCovidVietNam,getAPINewsCovidVietNam,getAPIDirectingCovidVietNam
-from .models import PatientInfo,NewsInfo,DirectingInfo, DictricStatictisInfo
+from .get_api import getAPIInfoPatientCovidVietNam,getAPINewsCovidVietNam,getAPIDirectingCovidVietNam, getAPIDirectingNewsCovidVietNam
+from .models import PatientInfo,NewsInfo,DirectingInfo, DictricStatictisInfo, DirectingNewsInfo
 from django.db.models import Sum, Count, F
 import os
 import json
@@ -83,4 +83,21 @@ def update_dataDirecting():
         print("error")
         pass
 
+@background(schedule=timedelta(minutes=0))
+def update_dataDirectingNews():
+    try:
+        list_stats=getAPIDirectingNewsCovidVietNam()
+        for list_stat in list_stats:
+            if(DirectingNewsInfo.objects.filter(title=list_stat[0]).count()>0):
+                pass
+            else:
+                p = DirectingNewsInfo(title=list_stat[0],
+                             link=list_stat[1],
+                             image=list_stat[2],
+                             content=list_stat[3],
+                             date=list_stat[4])
+                p.save()
+    except Exception:
+        print("error")
+        pass
 

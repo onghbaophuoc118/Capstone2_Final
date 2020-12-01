@@ -5,9 +5,9 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, RedirectView, UpdateView
-from .tasks import update_dataPatient, update_dataNews, update_dataDirecting
+from .tasks import update_dataPatient, update_dataNews, update_dataDirecting,update_dataDirectingNews
 from django.http import JsonResponse
-from .models import PatientInfo, NewsInfo, DirectingInfo, DictricStatictisInfo
+from .models import PatientInfo, NewsInfo, DirectingInfo, DictricStatictisInfo,DirectingNewsInfo
 from django.core.serializers import serialize
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -36,6 +36,7 @@ class UpTask(View):
         update_dataPatient(repeat=3600)
         update_dataNews(repeat=3600)
         update_dataDirecting(repeat=3600)
+        update_dataDirectingNews(repeat=3600)
         return JsonResponse({}, status=302)
 
 
@@ -92,3 +93,9 @@ class DirectingListView(View):
     def get(self, request):
         data = list(DirectingInfo.objects.values())
         return JsonResponse(data, safe=False)
+
+class DirectingNewsListView(View):
+    def get(self, request):
+        data = list(DirectingNewsInfo.objects.values())
+        return JsonResponse(data, safe=False)
+

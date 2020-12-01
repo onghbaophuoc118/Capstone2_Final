@@ -3,7 +3,7 @@ from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 
 
-from .models import PatientInfo,NewsInfo,DirectingInfo,DictricStatictisInfo
+from .models import PatientInfo,NewsInfo,DirectingInfo,DictricStatictisInfo,DirectingNewsInfo
 
 User = get_user_model()
 
@@ -24,3 +24,8 @@ class DirectingInfoAdmin(admin.ModelAdmin):
 @admin.register(DictricStatictisInfo)
 class DictricStatictisInfoAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(DirectingNewsInfo)
+class DirectingNewsInfoAdmin(admin.ModelAdmin):
+    pass
+

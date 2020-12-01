@@ -82,4 +82,37 @@ def getAPIDirectingCovidVietNam():
 
     return list_directing
 
+def getAPIDirectingNewsCovidVietNam():
+    url = "https://ncov.moh.gov.vn/vi/web/guest/chi-dao-dh"
+    res = requests.get(url, verify=False)
+    list_stats = []
+
+    soup = BeautifulSoup(res.text, 'html.parser')
+
+    tables_stats_covid19 = soup.find_all('div', class_="portlet-body")
+    tables_stats_covid19.pop(0)
+    tables_stats_covid19 = tables_stats_covid19[0].find_all('div', class_="")
+
+    for index, table_stats_covid19 in enumerate(tables_stats_covid19):
+        if index == 0:
+            data_title = table_stats_covid19.find('h2', class_='mt-3').text
+            data_link = table_stats_covid19.find('a')['href']
+            data_image = table_stats_covid19.find('img')['data-src']
+            data_content = table_stats_covid19.find('p').text
+            data_date = table_stats_covid19.find('small', class_='text-muted').text
+            list_tmp = [data_title, data_link, data_image, data_content, data_date]
+            list_stats.append(list_tmp)
+        else:
+            stats = table_stats_covid19.find_all('div', class_="row mb-1")
+            for stat in stats:
+                data_title = stat.find('a', class_='text-tletin').text
+                data_link = stat.find('a', class_='text-tletin')['href']
+                data_image = stat.find('img')['data-src']
+                data_content = stat.find('p').text
+                data_date = stat.find('small', class_='text-muted').text
+                list_tmp = [data_title, data_link, data_image, data_content, data_date]
+                list_stats.append(list_tmp)
+
+    return list_stats
+
 
