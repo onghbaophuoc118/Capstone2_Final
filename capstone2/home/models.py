@@ -8,6 +8,8 @@ class PatientInfo(models.Model):
     address = models.CharField(max_length=200)
     status = models.CharField(max_length=100)
     national= models.CharField(max_length=200)
+    description= models.TextField()
+    id_popup=  models.IntegerField(default=0)
 
     def __str__(self):
         return self.id_patient

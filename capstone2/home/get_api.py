@@ -8,19 +8,29 @@ def getAPIInfoPatientCovidVietNam():
     list_patients = []
 
     soup = BeautifulSoup(res.text, 'html.parser')
-    tables_stats_covid19 = soup.find('section', class_="bg-xam pt-5 pb-5 mb-5").find_all('div', class_=["text-success","text-danger","text-muted"])
+    tables_stats_covid19 = soup.find('section', class_="bg-xam pt-5 pb-5 mb-5").find_all('div', class_=["text-success",
+                                                                                                        "text-danger",
+                                                                                                        "text-muted"])
     for table_stats_covid19 in tables_stats_covid19:
         id_vs_age_patient = table_stats_covid19.find('a').get_text()
         id_vs_age_patient = id_vs_age_patient.split(" - ")
-        id_vs_age_patient[len(id_vs_age_patient)-1]=id_vs_age_patient[len(id_vs_age_patient)-1].split(" ")[0]
+        id_vs_age_patient[len(id_vs_age_patient) - 1] = id_vs_age_patient[len(id_vs_age_patient) - 1].split(" ")[0]
         items = table_stats_covid19.find('p')
         items = items.get_text().strip().split("\n")
+        # print(items)
         for i, item in enumerate(items):
             if (item[len(item) - 1] == "I"):
                 item = item[:-1].strip()
                 items[i] = item
             else:
                 None
+
+        # format thongtindichte('112') is 112
+        infor_dichte = table_stats_covid19.find('a')['onclick']
+        infor_dichte = infor_dichte.split("thongTinDichTe('")
+        format_infor_dichte = "".join(infor_dichte).split("')")
+        infor_number_dichte = "".join(format_infor_dichte)
+        items.append(infor_number_dichte)
         items = id_vs_age_patient + items
         list_patients.append(items)
 
@@ -114,5 +124,31 @@ def getAPIDirectingNewsCovidVietNam():
                 list_stats.append(list_tmp)
 
     return list_stats
+
+#---------------------ghi chu benh nhan----------------
+def get_description_patient(id_benhnhan):
+    session = requests.Session()
+    session.verify=False
+
+    session.head('https://ncov.moh.gov.vn/vi/web/guest/trang-chu')
+
+    response = session.post(
+        url='https://ncov.moh.gov.vn/vi/web/guest/trang-chu',
+        data={
+            'p_p_id':'corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v',
+            'p_p_lifecycle':2,
+            'p_p_state':'normal',
+            'p_p_mode':'view',
+            'p_p_resource_id':'getThongTinDichTe',
+            'p_p_cacheability':'cacheLevelPage',
+            '_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v_strValue':id_benhnhan
+        },
+        headers={
+            'Referer': 'https://ncov.moh.gov.vn/vi/web/guest/trang-chu'
+        }
+    )
+    return response.json()["moTa"]
+
+
 
 
