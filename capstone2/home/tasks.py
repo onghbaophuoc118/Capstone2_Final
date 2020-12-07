@@ -1,7 +1,7 @@
 from background_task import background
 from datetime import timedelta
 from .get_api import getAPIInfoPatientCovidVietNam, getAPINewsCovidVietNam, getAPIDirectingCovidVietNam, \
-    getAPIDirectingNewsCovidVietNam, get_description_patient
+    getAPIDirectingNewsCovidVietNam
 from .models import PatientInfo, NewsInfo, DirectingInfo, DictricStatictisInfo, DirectingNewsInfo
 from django.db.models import Sum, Count, F
 import os
@@ -13,10 +13,6 @@ import codecs
 def update_dataPatient():
     try:
         list_patients = getAPIInfoPatientCovidVietNam()
-        # if (PatientInfo.objects.filter(id_patient=list_patients[0])):
-        #     print('ahihihiihihihihihihih------------------')
-        #     pass
-        # else:
         with codecs.open(os.getcwd() + '\data-file.txt', 'w', encoding='utf-8') as f:
             json.dump(list_patients, f, ensure_ascii=False)
         PatientInfo.objects.all().delete()
@@ -45,26 +41,26 @@ def update_dataPatient():
             d.save()
 
     except Exception:
-        print("error")
+        print("error Patient")
         pass
 
-@background(schedule=timedelta(minutes=0))
-def update_description():
-    try:
-        abc=PatientInfo.objects.all().reverse()
-        for patient in abc:
-            patient.description=get_description_patient(patient.id_popup)
-            patient.save()
-    except Exception:
-        print("error description")
-        pass
+# @background(schedule=timedelta(minutes=0))
+# def update_description():
+#     try:
+#         abc=PatientInfo.objects.all().reverse()
+#         for patient in abc:
+#             patient.description=get_description_patient(patient.id_popup)
+#             patient.save()
+#     except Exception:
+#         print("error description")
+#         pass
 
 @background(schedule=timedelta(minutes=0))
 def update_dataNews():
     try:
         list_news = getAPINewsCovidVietNam()
         for list_new in list_news:
-            if (NewsInfo.objects.filter(title=list_new[0]).count() > 0):
+            if (NewsInfo.objects.filter(title=list_new[0])):
                 pass
             else:
                 p = NewsInfo(title=list_new[0],
@@ -74,7 +70,7 @@ def update_dataNews():
                              date=list_new[4])
                 p.save()
     except Exception:
-        print("error")
+        print("error News")
         pass
 
 
@@ -95,7 +91,7 @@ def update_dataDirecting():
 
                 p.save()
     except Exception:
-        print("error")
+        print("error Diirecting")
         pass
 
 
@@ -104,7 +100,7 @@ def update_dataDirectingNews():
     try:
         list_stats = getAPIDirectingNewsCovidVietNam()
         for list_stat in list_stats:
-            if (DirectingNewsInfo.objects.filter(title=list_stat[0]).count() > 0):
+            if (DirectingNewsInfo.objects.filter(title=list_stat[0])):
                 pass
             else:
                 p = DirectingNewsInfo(title=list_stat[0],
@@ -114,5 +110,5 @@ def update_dataDirectingNews():
                                       date=list_stat[4])
                 p.save()
     except Exception:
-        print("error")
+        print("error Directing News")
         pass

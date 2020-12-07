@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, RedirectView, UpdateView
-from .tasks import update_dataPatient, update_dataNews, update_dataDirecting,update_dataDirectingNews,update_description
+from .tasks import update_dataPatient, update_dataNews, update_dataDirecting,update_dataDirectingNews
 from django.http import JsonResponse
 from .models import PatientInfo, NewsInfo, DirectingInfo, DictricStatictisInfo,DirectingNewsInfo
 from django.core.serializers import serialize
@@ -37,7 +37,7 @@ class UpTask(View):
         update_dataNews(repeat=3600)
         update_dataDirecting(repeat=3600)
         update_dataDirectingNews(repeat=3600)
-        update_description(repeat=3600)
+        #update_description(repeat=3600)
         return JsonResponse({}, status=302)
 
 
@@ -47,7 +47,7 @@ class PatientsListView(View):
         return super(PatientsListView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        data = list(PatientInfo.objects.values())
+        data = list(PatientInfo.objects.values().order_by('id'))
         return JsonResponse(data, safe=False)
 
     def post(self, request):
@@ -86,17 +86,17 @@ class StatisticOverview(View):
 
 class NewsListView(View):
     def get(self, request):
-        data = list(NewsInfo.objects.values())
+        data = list(NewsInfo.objects.values().order_by('id').reverse())
         return JsonResponse(data, safe=False)
 
 
 class DirectingListView(View):
     def get(self, request):
-        data = list(DirectingInfo.objects.values())
+        data = list(DirectingInfo.objects.values().order_by('id'))
         return JsonResponse(data, safe=False)
 
 class DirectingNewsListView(View):
     def get(self, request):
-        data = list(DirectingNewsInfo.objects.values())
+        data = list(DirectingNewsInfo.objects.values().order_by('id'))
         return JsonResponse(data, safe=False)
 
