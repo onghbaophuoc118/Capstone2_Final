@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, RedirectView, UpdateView
-from .tasks import update_dataPatient, update_dataNews, update_dataDirecting,update_dataDirectingNews
+from .tasks import update_dataPatient, update_dataNews, update_dataDirecting,update_dataDirectingNews,update_description
 from django.http import JsonResponse
 from .models import PatientInfo, NewsInfo, DirectingInfo, DictricStatictisInfo,DirectingNewsInfo
 from django.core.serializers import serialize

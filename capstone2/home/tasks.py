@@ -1,7 +1,7 @@
 from background_task import background
 from datetime import timedelta
 from .get_api import getAPIInfoPatientCovidVietNam, getAPINewsCovidVietNam, getAPIDirectingCovidVietNam, \
-    getAPIDirectingNewsCovidVietNam
+    getAPIDirectingNewsCovidVietNam, get_description_patient
 from .models import PatientInfo, NewsInfo, DirectingInfo, DictricStatictisInfo, DirectingNewsInfo
 from django.db.models import Sum, Count, F
 import os
@@ -11,15 +11,31 @@ import codecs
 
 @background(schedule=timedelta(minutes=0))
 def update_dataPatient():
+    # try:
+    #     list_patients = getAPIInfoPatientCovidVietNam()
+    #     with codecs.open(os.getcwd() + '\data-file.txt', 'w', encoding='utf-8') as f:
+    #         json.dump(list_patients, f, ensure_ascii=False)
+    #     PatientInfo.objects.all().delete()
+    #     for list_patient in list_patients:
+    #         p = PatientInfo(id_patient=list_patient[0], age=list_patient[1], address=list_patient[2],
+    #                         status=list_patient[3], national=list_patient[4], id_popup=list_patient[5])
+    #         p.save()
+
     try:
         list_patients = getAPIInfoPatientCovidVietNam()
-        with codecs.open(os.getcwd() + '\data-file.txt', 'w', encoding='utf-8') as f:
-            json.dump(list_patients, f, ensure_ascii=False)
-        PatientInfo.objects.all().delete()
-        for list_patient in list_patients:
-            p = PatientInfo(id_patient=list_patient[0], age=list_patient[1], address=list_patient[2],
-                            status=list_patient[3], national=list_patient[4], id_popup=list_patient[5])
-            p.save()
+        print('0=================')
+        if (len(list_patients) > PatientInfo.objects.all().count()):
+            print('1-------------------------')
+            with codecs.open(os.getcwd() + '\data-file.txt', 'w', encoding='utf-8') as f:
+                print('2----------------------')
+                json.dump(list_patients, f, ensure_ascii=False)
+                print('3-------------------')
+            PatientInfo.objects.all().delete()
+            print('aihihihihihihihihiih------------------')
+            for list_patient in list_patients:
+                p = PatientInfo(id_patient=list_patient[0], age=list_patient[1], address=list_patient[2],
+                                status=list_patient[3], national=list_patient[4], id_popup=list_patient[5])
+                p.save()
 
         # save dictric static
         DictricStatictisInfo.objects.all().delete()
@@ -44,16 +60,16 @@ def update_dataPatient():
         print("error Patient")
         pass
 
-# @background(schedule=timedelta(minutes=0))
-# def update_description():
-#     try:
-#         abc=PatientInfo.objects.all().reverse()
-#         for patient in abc:
-#             patient.description=get_description_patient(patient.id_popup)
-#             patient.save()
-#     except Exception:
-#         print("error description")
-#         pass
+@background(schedule=timedelta(minutes=0))
+def update_description():
+    try:
+        abc=PatientInfo.objects.all().reverse()
+        for patient in abc:
+            patient.description=get_description_patient(patient.id_popup)
+            patient.save()
+    except Exception:
+        print("error description")
+        pass
 
 @background(schedule=timedelta(minutes=0))
 def update_dataNews():

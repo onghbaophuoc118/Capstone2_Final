@@ -126,28 +126,28 @@ def getAPIDirectingNewsCovidVietNam():
     return list_stats
 
 #---------------------ghi chu benh nhan----------------
-# def get_description_patient(id_benhnhan):
-#     session = requests.Session()
-#     session.verify=False
-#
-#     session.head('https://ncov.moh.gov.vn/vi/web/guest/trang-chu')
-#
-#     response = session.post(
-#         url='https://ncov.moh.gov.vn/vi/web/guest/trang-chu',
-#         data={
-#             'p_p_id':'corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v',
-#             'p_p_lifecycle':2,
-#             'p_p_state':'normal',
-#             'p_p_mode':'view',
-#             'p_p_resource_id':'getThongTinDichTe',
-#             'p_p_cacheability':'cacheLevelPage',
-#             '_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v_strValue':id_benhnhan
-#         },
-#         headers={
-#             'Referer': 'https://ncov.moh.gov.vn/vi/web/guest/trang-chu'
-#         }
-#     )
-#     return response.json()["moTa"]
+def get_description_patient(id_benhnhan):
+    session = requests.Session()
+    session.verify=False
+
+    session.head('https://ncov.moh.gov.vn/vi/web/guest/trang-chu')
+
+    response = session.post(
+        url='https://ncov.moh.gov.vn/vi/web/guest/trang-chu',
+        data={
+            'p_p_id':'corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v',
+            'p_p_lifecycle':2,
+            'p_p_state':'normal',
+            'p_p_mode':'view',
+            'p_p_resource_id':'getThongTinDichTe',
+            'p_p_cacheability':'cacheLevelPage',
+            '_corona_trangchu_top_CoronaTrangchuTopPortlet_INSTANCE_RrVAbIFIPL7v_strValue':id_benhnhan
+        },
+        headers={
+            'Referer': 'https://ncov.moh.gov.vn/vi/web/guest/trang-chu'
+        }
+    )
+    return response.json()["moTa"]
 
 
 
